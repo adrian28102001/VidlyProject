@@ -12,5 +12,6 @@ public class CustomerConfiguration : IEntityTypeConfiguration<Customer>
             .HasOne<MembershipType>(c => c.MembershipType)
             .WithMany(a => a.Customers)
             .HasForeignKey(c => c.MembershipTypeId);
+        
     }
 }
