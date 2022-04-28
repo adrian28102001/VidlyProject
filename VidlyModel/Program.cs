@@ -16,6 +16,15 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+// using (var db = new VidlyDbContext())
+// {
+//     var movie = db.Set<Movie>();
+//     movie.Add(new Movie {Name = "Movie1", DateAdded = DateTime.Now, GenreId = 1, ReleaseDate = DateTime.Today, NumberInStock = 2});
+//     movie.Add(new Movie {Name = "Movie2", DateAdded = DateTime.Now, GenreId = 2, ReleaseDate = DateTime.Today, NumberInStock = 4});
+//     movie.Add(new Movie {Name = "Movie3", DateAdded = DateTime.Now, GenreId = 3, ReleaseDate = DateTime.Today, NumberInStock = 3});
+//     movie.Add(new Movie {Name = "Movie4", DateAdded = DateTime.Now, GenreId = 4, ReleaseDate = DateTime.Today, NumberInStock = 1});
+//     db.SaveChanges();
+// }
 
 // using (var db = new VidlyDbContext())
 // {
@@ -25,16 +34,7 @@ if (!app.Environment.IsDevelopment())
 //
 //     db.SaveChanges();
 // }
-// using (var db = new VidlyDbContext())
-// {
-//     var type = db.Set<MembershipType>();
-//     type.Add(new MembershipType {Id = 1, Name = "Pay as You Go", DiscountRate = 0, DurationInMonth = 0,SignUpFee = 0});
-//     type.Add(new MembershipType {Id = 2, Name = "Monthly", DiscountRate = 10, DurationInMonth = 1,SignUpFee = 30});
-//     type.Add(new MembershipType {Id = 3,Name = "Quarterly", DiscountRate = 15,DurationInMonth = 3,SignUpFee = 90});
-//     type.Add(new MembershipType {Id = 4, Name = "Annual", DiscountRate = 20,DurationInMonth = 12,SignUpFee = 300});
-//
-//     db.SaveChanges();
-// }
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 

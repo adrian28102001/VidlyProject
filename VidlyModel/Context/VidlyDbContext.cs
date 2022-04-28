@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using VidlyModel.Configuration;
 using VidlyModel.Models;
 
 
@@ -8,20 +9,21 @@ public class VidlyDbContext : DbContext
 {
     public DbSet<Customer> Customers { get; set; }
     public DbSet<MembershipType> MembershipTypes { get; set; }
+    public DbSet<Movie> Movies{ get; set; }
+    public DbSet<Genre> Genres{ get; set; }
     
     public VidlyDbContext()
     {
     }
-    
+
+    public VidlyDbContext(DbContextOptions<VidlyDbContext> options) : base(options) { }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Customer>()
-            .HasOne<MembershipType>(c => c.MembershipType)
-            .WithMany(a => a.Customers)
-            .HasForeignKey(c=> c.MembershipTypeId);
+        modelBuilder.ApplyConfiguration(new CustomerConfiguration());
+        modelBuilder.ApplyConfiguration(new MovieConfiguration());
     }
-    
-    public VidlyDbContext(DbContextOptions<VidlyDbContext> options) : base(options) { }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {   
         var configuration = new ConfigurationBuilder()
