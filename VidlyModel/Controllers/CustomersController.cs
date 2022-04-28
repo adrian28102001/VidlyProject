@@ -22,12 +22,13 @@ public class CustomersController : Controller
     {
         var customers =await _context.Customers.Include(c => c.MembershipType).ToListAsync();
 
+
         return View(customers);
     }
 
     public ActionResult Details(int id)
     {
-        var customer = _context.Customers.SingleOrDefault(c => c.Id == id); ;
+        var customer = _context.Customers.Include(c => c.MembershipType).SingleOrDefault(c => c.Id == id); ;
         if (customer == null)
             return StatusCode(418); //HTTP not found
 
