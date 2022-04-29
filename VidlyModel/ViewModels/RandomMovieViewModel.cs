@@ -1,6 +1,6 @@
 using VidlyModel.Models;
 
-namespace VidlyModel.Pages;
+namespace VidlyModel.ViewModels;
 
 public class RandomMovieViewModel
 {

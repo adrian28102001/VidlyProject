@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VidlyModel.Context;
 using VidlyModel.Models;
-using VidlyModel.Pages;
+using VidlyModel.ViewModels;
 
 namespace VidlyModel.Controllers;
 
@@ -23,8 +23,9 @@ public class CustomersController : Controller
     public ActionResult New()
     {
         var membershipTypes = _context.MembershipTypes.ToList();
-        var viewModel = new CustomerFromViewModel()
+        var viewModel = new CustomerFormViewModel()
         {
+            Customer = new Customer(),
             MembershipTypes = membershipTypes
         };
         return View("CustomerForm", viewModel);
@@ -49,10 +50,21 @@ public class CustomersController : Controller
     }
 
     [HttpPost]
-    public IActionResult Save(Customer customer)
+    public async Task<IActionResult> Save(Customer customer)
     {
+        // if (!ModelState.IsValid)
+        // {
+        //     var viewModel = new CustomerFormViewModel()
+        //     {
+        //         Customer = customer,
+        //         MembershipTypes = await _context.MembershipTypes.ToListAsync()
+        //     };
+        //
+        //     return View("CustomerForm", viewModel);
+        // }
+        
         if (customer.Id == 0)
-            _context.Customers.Add(customer);
+            await _context.Customers.AddAsync(customer);
         else
         {
             var customerInDb = _context.Customers.Single(c => c.Id == customer.Id);
@@ -60,23 +72,22 @@ public class CustomersController : Controller
             customerInDb.Birthdate = customer.Birthdate;
             customerInDb.MembershipTypeId = customer.MembershipTypeId;
             customerInDb.IsSubscribedToNewsletter = customer.IsSubscribedToNewsletter;
-            
-
         }
-        _context.SaveChanges();
+
+        await _context.SaveChangesAsync();
         return RedirectToAction("Index", "Customers");
     }
 
-    public IActionResult Edit(int id)
+    public async Task<IActionResult> Edit(int id)
     {
-        var customer = _context.Customers.SingleOrDefault(c => c.Id == id);
+        var customer = await _context.Customers.SingleOrDefaultAsync(c => c.Id == id);
         if (customer == null)
             return StatusCode(418); //HTTP not found
 
-        var viewModel = new CustomerFromViewModel
+        var viewModel = new CustomerFormViewModel()
         {
             Customer = customer,
-            MembershipTypes = _context.MembershipTypes.ToList()
+            MembershipTypes = await _context.MembershipTypes.ToListAsync()
         };
 
         return View("CustomerForm", viewModel);

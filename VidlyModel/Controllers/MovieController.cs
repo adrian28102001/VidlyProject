@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VidlyModel.Context;
 using VidlyModel.Models;
-using VidlyModel.Pages;
+using VidlyModel.ViewModels;
+
 
 namespace VidlyModel.Controllers;
 
@@ -20,34 +21,55 @@ public class MovieController : Controller
         _context.Dispose();
     }
 
-    public async Task<ViewResult> Index()
+    public ViewResult Index()
     {
-        var movies = await _context.Movies.Include(m => m.Genre).ToListAsync();
+        var movies = _context.Movies.Include(m => m.Genre).ToList();
 
         return View(movies);
     }
+
+    public ViewResult New()
+    {
+        var genres = _context.Genres.ToList();
+
+        var viewModel = new MovieFormViewModel
+        {
+            Genres = genres
+        };
+
+        return View("MoviewForm", viewModel);
+    }
+
+    public ActionResult Edit(int id)
+    {
+        var movie = _context.Movies.SingleOrDefault(c => c.Id == id);
+
+        if (movie == null)
+            return StatusCode(418);
+
+        var viewModel = new MovieFormViewModel
+        {
+            Movie = movie,
+            Genres = _context.Genres.ToList()
+        };
+
+        return View("MoviewForm", viewModel);
+    }
+
 
     public ActionResult Details(int id)
     {
         var movie = _context.Movies.Include(m => m.Genre).SingleOrDefault(m => m.Id == id);
 
         if (movie == null)
-            return StatusCode(418); //HTTP not found
+            return StatusCode(418);
 
         return View(movie);
     }
 
-    public IActionResult New()
-    {
-        var genres = _context.Genres.ToList();
-        var viewModel = new MovieFormViewModel()
-        {
-            Genres = genres
-        };
-        return View("MoviewForm", viewModel);
-    }
 
-    public IActionResult Save(Movie movie)
+    [HttpPost]
+    public ActionResult Save(Movie movie)
     {
         if (movie.Id == 0)
         {
@@ -64,19 +86,7 @@ public class MovieController : Controller
         }
 
         _context.SaveChanges();
-        return RedirectToAction("Index", "Movie");
-    }
 
-    public IActionResult Edit(int id)
-    {
-        var movie = _context.Movies.SingleOrDefault(c => c.Id == id);
-        if (movie == null)
-            return StatusCode(418);
-        var viewModel = new MovieFormViewModel()
-        {
-            Movie = movie,
-            Genres = _context.Genres.ToList()
-        };
-        return View("MoviewForm", viewModel);
+        return RedirectToAction("Index", "Movie");
     }
 }
