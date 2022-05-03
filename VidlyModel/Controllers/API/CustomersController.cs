@@ -1,4 +1,3 @@
-using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +7,7 @@ using VidlyModel.Models;
 
 namespace VidlyModel.Controllers.API
 {
-    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
     {
@@ -22,14 +21,14 @@ namespace VidlyModel.Controllers.API
         }
 
         // GET: api/Customers
-        [Microsoft.AspNetCore.Mvc.HttpGet]
+        [HttpGet]
         public IEnumerable<CustomerDto> GetCustomers()
         {
             return _context.Customers.ToList().Select(_mapper.Map<Customer, CustomerDto>);
         }
 
         // GET: api/Customers/5
-        [Microsoft.AspNetCore.Mvc.HttpGet("{id}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<CustomerDto>> GetCustomer(int id)
         {
             var customer = await _context.Customers.SingleOrDefaultAsync(c=>c.Id == id);
@@ -44,7 +43,7 @@ namespace VidlyModel.Controllers.API
         }
 
         // PUT: api/Customers/5
-        [Microsoft.AspNetCore.Mvc.HttpPut("{id}")]
+        [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer(int id, CustomerDto customerDto)
         {
             if (id != customerDto.Id)
@@ -87,7 +86,7 @@ namespace VidlyModel.Controllers.API
         }
 
         // DELETE: api/Customers/5
-        [Microsoft.AspNetCore.Mvc.HttpDelete("{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
             var customer = await _context.Customers.FindAsync(id);

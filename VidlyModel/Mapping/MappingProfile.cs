@@ -10,5 +10,7 @@ public class MappingProfile : Profile
     {
         CreateMap<Customer, CustomerDto>();
         CreateMap<CustomerDto, Customer>();
+        CreateMap<Movie, MovieDto>();
+        CreateMap<MovieDto, Movie>();
     }
 }
