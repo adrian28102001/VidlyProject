@@ -1,3 +1,4 @@
+using System.Web.Http;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +8,7 @@ using VidlyModel.Models;
 
 namespace VidlyModel.Controllers.API
 {
-    [Route("api/[controller]")]
+    [Microsoft.AspNetCore.Mvc.Route("api/[controller]")]
     [ApiController]
     public class CustomersController : ControllerBase
     {
@@ -21,14 +22,14 @@ namespace VidlyModel.Controllers.API
         }
 
         // GET: api/Customers
-        [HttpGet]
+        [Microsoft.AspNetCore.Mvc.HttpGet]
         public IEnumerable<CustomerDto> GetCustomers()
         {
             return _context.Customers.ToList().Select(_mapper.Map<Customer, CustomerDto>);
         }
 
         // GET: api/Customers/5
-        [HttpGet("{id}")]
+        [Microsoft.AspNetCore.Mvc.HttpGet("{id}")]
         public async Task<ActionResult<CustomerDto>> GetCustomer(int id)
         {
             var customer = await _context.Customers.SingleOrDefaultAsync(c=>c.Id == id);
@@ -43,15 +44,17 @@ namespace VidlyModel.Controllers.API
         }
 
         // PUT: api/Customers/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCustomer(int id, Customer customer)
+        [Microsoft.AspNetCore.Mvc.HttpPut("{id}")]
+        public async Task<IActionResult> PutCustomer(int id, CustomerDto customerDto)
         {
-            if (id != customer.Id)
+            if (id != customerDto.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(customer).State = EntityState.Modified;
+            var customerInDb = _context.Customers.SingleOrDefaultAsync(c => c.Id == id);
+            await _mapper.Map(customerDto,customerInDb);
+            _context.Entry(customerDto).State = EntityState.Modified;
 
             try
             {
@@ -73,17 +76,18 @@ namespace VidlyModel.Controllers.API
         }
 
         // POST: api/Customers
-        [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
+        [System.Web.Http.HttpPost]
+        public async Task<ActionResult<Customer>> PostCustomer(CustomerDto customerDto)
         {
+            var customer = _mapper.Map<CustomerDto, Customer>(customerDto);
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetCustomer", new {id = customer.Id}, customer);
+            customerDto.Id = customer.Id;
+            return CreatedAtAction("GetCustomer", new { id = customerDto.Id }, customerDto);
         }
 
         // DELETE: api/Customers/5
-        [HttpDelete("{id}")]
+        [Microsoft.AspNetCore.Mvc.HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCustomer(int id)
         {
             var customer = await _context.Customers.FindAsync(id);

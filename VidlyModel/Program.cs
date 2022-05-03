@@ -3,7 +3,7 @@ using AutoMapper;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
-//builder.Services.AddScoped<Mapper, IMapper>();
+
 
 
 // Add services to the container.
