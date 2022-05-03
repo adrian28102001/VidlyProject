@@ -9,8 +9,14 @@ public class MappingProfile : Profile
     public MappingProfile()
     {
         CreateMap<Customer, CustomerDto>();
-        CreateMap<CustomerDto, Customer>();
         CreateMap<Movie, MovieDto>();
-        CreateMap<MovieDto, Movie>();
+
+
+        // Dto to Domain
+        CreateMap<CustomerDto, Customer>()
+            .ForMember(c => c.Id, opt => opt.Ignore());
+
+        CreateMap<MovieDto, Movie>()
+            .ForMember(c => c.Id, opt => opt.Ignore());
     }
 }

@@ -44,7 +44,7 @@ namespace VidlyModel.Controllers.API
 
         // PUT: api/Movie/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut]
         public async Task<IActionResult> PutMovie(int id, MovieDto movieDto)
         {
             if (id != movieDto.Id)
