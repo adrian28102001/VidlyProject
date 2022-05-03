@@ -1,6 +1,8 @@
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VidlyModel.Context;
+using VidlyModel.Dto;
 using VidlyModel.Models;
 
 namespace VidlyModel.Controllers.API
@@ -10,35 +12,37 @@ namespace VidlyModel.Controllers.API
     public class CustomersController : ControllerBase
     {
         private readonly VidlyDbContext _context;
+        private readonly IMapper _mapper;
 
-        public CustomersController()
+        public CustomersController(IMapper mapper)
         {
             _context = new VidlyDbContext();
+            _mapper = mapper;
         }
 
         // GET: api/Customers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        public IEnumerable<CustomerDto> GetCustomers()
         {
-            return await _context.Customers.ToListAsync();
+            return _context.Customers.ToList().Select(_mapper.Map<Customer, CustomerDto>);
         }
 
         // GET: api/Customers/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomer(int id)
+        public async Task<ActionResult<CustomerDto>> GetCustomer(int id)
         {
-            var customer = await _context.Customers.FindAsync(id);
-
+            var customer = await _context.Customers.SingleOrDefaultAsync(c=>c.Id == id);
+            var mappedUser = _mapper.Map<Customer, CustomerDto>(customer!);
+            
             if (customer == null)
             {
                 return NotFound();
             }
 
-            return customer;
+            return mappedUser;
         }
 
         // PUT: api/Customers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutCustomer(int id, Customer customer)
         {
@@ -69,7 +73,6 @@ namespace VidlyModel.Controllers.API
         }
 
         // POST: api/Customers
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
         {
