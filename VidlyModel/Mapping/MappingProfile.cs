@@ -10,6 +10,7 @@ public class MappingProfile : Profile
     {
         CreateMap<Customer, CustomerDto>();
         CreateMap<Movie, MovieDto>();
+        CreateMap<MembershipType, MembershipTypeDto>();
 
 
         // Dto to Domain

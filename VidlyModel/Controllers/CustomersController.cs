@@ -31,12 +31,9 @@ public class CustomersController : Controller
         return View("CustomerForm", viewModel);
     }
 
-    public async Task<ViewResult> Index()
+    public Task<ViewResult> Index()
     {
-        var customers = await _context.Customers.Include(c => c.MembershipType).ToListAsync();
-
-
-        return View(customers);
+        return Task.FromResult(View());
     }
 
     public ActionResult Details(int id)

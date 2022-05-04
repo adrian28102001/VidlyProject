@@ -9,4 +9,5 @@ public class CustomerDto
     public bool IsSubscribedToNewsletter { get; set; }
     public DateTime? Birthdate { get; set; }
     public byte MembershipTypeId { get; set; } 
+    public MembershipTypeDto MembershipType { get; set; }
 }

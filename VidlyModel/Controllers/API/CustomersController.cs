@@ -24,16 +24,19 @@ namespace VidlyModel.Controllers.API
         [HttpGet]
         public IEnumerable<CustomerDto> GetCustomers()
         {
-            return _context.Customers.ToList().Select(_mapper.Map<Customer, CustomerDto>);
+            return _context.Customers
+                .Include(c => c.MembershipType)
+                .ToList()
+                .Select(_mapper.Map<Customer, CustomerDto>);
         }
 
         // GET: api/Customers/5
         [HttpGet("{id}")]
         public async Task<ActionResult<CustomerDto>> GetCustomer(int id)
         {
-            var customer = await _context.Customers.SingleOrDefaultAsync(c=>c.Id == id);
+            var customer = await _context.Customers.SingleOrDefaultAsync(c => c.Id == id);
             var mappedUser = _mapper.Map<Customer, CustomerDto>(customer!);
-            
+
             if (customer == null)
             {
                 return NotFound();
@@ -52,7 +55,7 @@ namespace VidlyModel.Controllers.API
             }
 
             var customerInDb = _context.Customers.SingleOrDefaultAsync(c => c.Id == id);
-            await _mapper.Map(customerDto,customerInDb);
+            await _mapper.Map(customerDto, customerInDb);
             _context.Entry(customerDto).State = EntityState.Modified;
 
             try
@@ -82,7 +85,7 @@ namespace VidlyModel.Controllers.API
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync();
             customerDto.Id = customer.Id;
-            return CreatedAtAction("GetCustomer", new { id = customerDto.Id }, customerDto);
+            return CreatedAtAction("GetCustomer", new {id = customerDto.Id}, customerDto);
         }
 
         // DELETE: api/Customers/5
