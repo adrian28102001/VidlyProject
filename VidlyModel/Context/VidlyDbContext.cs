@@ -1,11 +1,14 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using VidlyModel.Areas.Identity.Data;
 using VidlyModel.Configuration;
 using VidlyModel.Models;
 
 
 namespace VidlyModel.Context;
 
-public class VidlyDbContext : DbContext
+public class VidlyDbContext : IdentityDbContext<VidlyIdentityUser, VidlyIdentityRole, int>
 {
     public DbSet<Customer> Customers { get; set; }
     public DbSet<MembershipType> MembershipTypes { get; set; }
@@ -20,8 +23,9 @@ public class VidlyDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.ApplyConfiguration(new CustomerConfiguration());
-        modelBuilder.ApplyConfiguration(new MovieConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(MovieConfiguration).Assembly);
+
+        base.OnModelCreating(modelBuilder);
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -33,6 +37,8 @@ public class VidlyDbContext : DbContext
     
         var connectionString = configuration.GetConnectionString("DefaultConnection");
         optionsBuilder.UseSqlServer(connectionString);
+
+        base.OnConfiguring(optionsBuilder);
     }
     
 }

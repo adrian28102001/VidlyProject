@@ -14,10 +14,10 @@ namespace VidlyModel.Controllers.API
         private readonly VidlyDbContext _context;
         private readonly IMapper _mapper;
 
-        public CustomersController(IMapper mapper)
+        public CustomersController(IMapper mapper, VidlyDbContext context)
         {
-            _context = new VidlyDbContext();
             _mapper = mapper;
+            _context = context;
         }
 
         // GET: api/Customers

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using VidlyModel.Areas.Identity.Data;
 using VidlyModel.Models;
 
 namespace VidlyModel.Configuration;
