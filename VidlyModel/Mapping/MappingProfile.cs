@@ -11,6 +11,7 @@ public class MappingProfile : Profile
         CreateMap<Customer, CustomerDto>();
         CreateMap<Movie, MovieDto>();
         CreateMap<MembershipType, MembershipTypeDto>();
+        CreateMap<Genre, GenreDto>();
 
 
         // Dto to Domain

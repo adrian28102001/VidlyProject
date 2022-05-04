@@ -21,39 +21,42 @@ namespace VidlyModel.Controllers.API
             _mapper = mapper;
         }
 
-        // GET: api/Movie
         [HttpGet]
-        public  IEnumerable<MovieDto> GetMovies()
+        public IEnumerable<MovieDto> GetMovies()
         {
-            return _context.Movies.ToList().Select(_mapper.Map<Movie, MovieDto>);
+            return _context.Movies
+                .Include(c => c.Genre)
+                .ToList()
+                .Select(_mapper.Map<Movie, MovieDto>);
         }
 
-        // GET: api/Movie/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Movie>> GetMovie(int id)
+        public async Task<ActionResult<MovieDto>> GetMovie(int id)
         {
-            var movie = await _context.Movies.SingleOrDefaultAsync(c=>c.Id == id);
+            var movie = await _context.Movies.SingleOrDefaultAsync(c => c.Id == id);
+            var mappedMovie = _mapper.Map<Movie, MovieDto>(movie!);
 
             if (movie == null)
             {
                 return NotFound();
             }
 
-            return movie;
+            return mappedMovie;
         }
 
         // PUT: api/Movie/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut]
+        [HttpPut("{id}")]
         public async Task<IActionResult> PutMovie(int id, MovieDto movieDto)
         {
             if (id != movieDto.Id)
             {
                 return BadRequest();
             }
+
             var movieInDb = _context.Movies.SingleOrDefaultAsync(c => c.Id == id);
-            await _mapper.Map(movieDto,movieInDb);
-            _context.Entry(movieDto).State = EntityState.Modified;
+            await _mapper.Map(movieDto, movieInDb);
+            _context.Entry(movieInDb).State = EntityState.Modified;
 
             try
             {
@@ -76,14 +79,14 @@ namespace VidlyModel.Controllers.API
 
         // POST: api/Movie
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
+        [System.Web.Http.HttpPost]
         public async Task<ActionResult<Movie>> PostMovie(MovieDto movieDto)
         {
             var movie = _mapper.Map<MovieDto, Movie>(movieDto);
             _context.Movies.Add(movie);
             await _context.SaveChangesAsync();
             movieDto.Id = movie.Id;
-            return CreatedAtAction("GetMovie", new { id = movieDto.Id }, movieDto);
+            return CreatedAtAction("GetMovies", new {id = movieDto.Id}, movieDto);
         }
 
         // DELETE: api/Movie/5
