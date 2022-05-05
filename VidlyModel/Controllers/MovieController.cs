@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using VidlyModel.Context;
 using VidlyModel.Models;
+using VidlyModel.Models.Role;
 using VidlyModel.ViewModels;
 
 
@@ -23,9 +25,13 @@ public class MovieController : Controller
 
     public ViewResult Index()
     {
-        return View();
+        if (User.IsInRole(RoleName.CanManageMovies))
+            return View("List");
+     
+        return View("ReadOnlyList");
     }
-
+    
+    [Authorize(Roles = RoleName.CanManageMovies)]
     public ViewResult New()
     {
         var genres = _context.Genres.ToList();

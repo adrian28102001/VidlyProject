@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VidlyModel.Context;
 
@@ -11,9 +12,10 @@ using VidlyModel.Context;
 namespace VidlyModel.Migrations
 {
     [DbContext(typeof(VidlyDbContext))]
-    partial class VidlyDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220505072616_SeedUsers")]
+    partial class SeedUsers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -172,9 +174,6 @@ namespace VidlyModel.Migrations
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("DrivingLicense")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")

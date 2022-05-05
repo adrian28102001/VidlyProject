@@ -79,6 +79,7 @@ namespace VidlyModel.Areas.Identity.Pages.Account
             [EmailAddress]
             [Display(Name = "Email")]
             public string Email { get; set; }
+            public string DrivingLicense { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -113,8 +114,12 @@ namespace VidlyModel.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
-
+                var user = new VidlyIdentityUser()
+                {
+                    DrivingLicense = Input.DrivingLicense
+                };
+                
+                // var user = new  VidlyIdentityUser(){ UserName = Input.Email, Email = Input.Email, DrivingLicense = Input.DrivingLicense};
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
@@ -157,16 +162,7 @@ namespace VidlyModel.Areas.Identity.Pages.Account
 
         private VidlyIdentityUser CreateUser()
         {
-            try
-            {
-                return Activator.CreateInstance<VidlyIdentityUser>();
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(VidlyIdentityUser)}'. " +
-                    $"Ensure that '{nameof(VidlyIdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
-            }
+                return new VidlyIdentityUser();
         }
 
         private IUserEmailStore<VidlyIdentityUser> GetEmailStore()
