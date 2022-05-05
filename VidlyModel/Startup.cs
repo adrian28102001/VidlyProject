@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using VidlyModel.Areas.Identity.Data;
 using VidlyModel.Context;
