@@ -1,5 +1,3 @@
-using VidlyModel.Models;
-
 namespace VidlyModel.Dto;
 
 public class CustomerDto
